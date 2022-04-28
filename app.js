@@ -10,7 +10,7 @@ const RESULT_COMPUTER = 'COMPUTER_WON';
 
 let gameIsRunning = false;
 
-const getPlayerChoice = function () {
+const getPlayerChoice = () => {
   const selection = prompt(
     `${ROCK}, ${PAPER} or ${SCISSORS}?`,
     ''
@@ -18,13 +18,13 @@ const getPlayerChoice = function () {
 
   if (selection !== ROCK && selection !== PAPER && selection !== SCISSORS) {
     alert(`Invalid Choice! We chose ${DEFAULT_USER_CHOICE} for you!`);
-    return DEFAULT_USER_CHOICE;
+    return;
   }
 
   return selection;
 };
 
-const getComputerChoice = function () {
+const getComputerChoice = () => {
   const randomValue = Math.random();
 
   if (randomValue < 0.34) {
@@ -36,21 +36,16 @@ const getComputerChoice = function () {
   }
 };
 
-const getWinner = function (comChoice, plyChoice) {
-  if (comChoice === plyChoice) {
-    return RESULT_DRAW;
-  } else if (
-    (comChoice === ROCK && plyChoice === PAPER) ||
-    (comChoice === PAPER && plyChoice === SCISSORS) ||
-    (comChoice === SCISSORS && plyChoice === ROCK)
-  ) {
-    return RESULT_PLAYER;
-  } else {
-    return RESULT_COMPUTER;
-  }
-};
+const getWinner = (comChoice, plyChoice = DEFAULT_USER_CHOICE) =>
+  comChoice === plyChoice
+    ? RESULT_DRAW
+    : (comChoice === ROCK && plyChoice === PAPER) ||
+      (comChoice === PAPER && plyChoice === SCISSORS) ||
+      (comChoice === SCISSORS && plyChoice === ROCK)
+    ? RESULT_PLAYER
+    : RESULT_COMPUTER;
 
-startGameBtn.addEventListener('click', function () {
+startGameBtn.addEventListener('click',() => {
   if (gameIsRunning) {
     return;
   }
@@ -60,8 +55,14 @@ startGameBtn.addEventListener('click', function () {
   const playerChoice = getPlayerChoice();
   const computerChoice = getComputerChoice();
 
-  const winner = getWinner(computerChoice, playerChoice);
-  console.log(
-    `Player chose: ${playerChoice} & Computer chose: ${computerChoice}\nThe result is: ${winner}`
+  let winner;
+  if (playerChoice) {
+    winner = getWinner(computerChoice, playerChoice);
+  } else {
+    winner = getWinner(computerChoice)
+  }
+
+  alert(
+    `Player chose: ${playerChoice || DEFAULT_USER_CHOICE} & Computer chose: ${computerChoice}\nThe result is: ${winner}`
   );
 });
